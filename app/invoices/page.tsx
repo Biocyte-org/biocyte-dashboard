@@ -53,7 +53,7 @@ import {
   DialogFooter,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { InvoiceFormProps } from "@/types";
+import { InvoiceFormProps } from "@/types/invoice";
 
 // Badge component
 const badgeVariants = cva(
