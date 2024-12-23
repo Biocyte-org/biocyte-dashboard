@@ -10,7 +10,6 @@ export interface User {
 
 export interface Team {
   name: string;
-  logo: LucideIcon;
   plan: string;
 }
 
@@ -18,7 +17,6 @@ export interface Team {
 export interface NavItem {
   title: string;
   url: string;
-  icon?: LucideIcon;
   isActive?: boolean;
 }
 
