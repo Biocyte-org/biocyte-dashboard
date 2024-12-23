@@ -43,7 +43,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { MoreHorizontal, Plus } from 'lucide-react';
+import { MoreHorizontal, Plus } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -53,6 +53,7 @@ import {
   DialogFooter,
   DialogDescription,
 } from "@/components/ui/dialog";
+import { InvoiceFormProps } from "@/types";
 
 // Badge component
 const badgeVariants = cva(
@@ -86,19 +87,14 @@ interface BadgeProps
 function Badge({ className, variant, ...props }: BadgeProps) {
   return (
     <div className={cn(badgeVariants({ variant }), className)} {...props} />
-  )
+  );
 }
 
-// InvoiceForm component with type annotations for props and event handlers
-interface InvoiceFormProps {
-  invoice?: { customer: string; date: string; amount: string | number; status: string };
-  onSubmit: (formData: { customer: string; date: string; amount: string | number; status: string }) => void;
-  onCancel: () => void;
-}
 
 function InvoiceForm({ invoice, onSubmit, onCancel }: InvoiceFormProps) {
   const [formData, setFormData] = useState(
     invoice || {
+      id: Date.now(), // Temporary id for new invoices
       customer: "",
       date: "",
       amount: "",
@@ -117,7 +113,7 @@ function InvoiceForm({ invoice, onSubmit, onCancel }: InvoiceFormProps) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(formData);
+    onSubmit({ ...formData, amount: parseFloat(formData.amount as string) });
   };
 
   return (
@@ -157,10 +153,7 @@ function InvoiceForm({ invoice, onSubmit, onCancel }: InvoiceFormProps) {
       </div>
       <div>
         <Label htmlFor="status">Status</Label>
-        <Select
-          value={formData.status}
-          onValueChange={handleStatusChange}
-        >
+        <Select value={formData.status} onValueChange={handleStatusChange}>
           <SelectTrigger>
             <SelectValue placeholder="Select status" />
           </SelectTrigger>
@@ -181,48 +174,46 @@ function InvoiceForm({ invoice, onSubmit, onCancel }: InvoiceFormProps) {
   );
 }
 
-// Sample invoice data
-const initialInvoices = [
-  { id: 1, customer: "John Doe", date: "2023-05-01", amount: 299.99, status: "Paid" },
-  { id: 2, customer: "Jane Smith", date: "2023-05-05", amount: 149.5, status: "Pending" },
-  { id: 3, customer: "Bob Johnson", date: "2023-05-10", amount: 499.99, status: "Overdue" },
-];
-
-// Helper to get badge variant
+// Helper to determine badge variant
 const getStatusBadgeVariant = (status: string) => {
   switch (status) {
-    case 'Paid':
-      return 'success';
-    case 'Pending':
-      return 'warning';
-    case 'Overdue':
-      return 'destructive';
+    case "Paid":
+      return "success";
+    case "Pending":
+      return "warning";
+    case "Overdue":
+      return "destructive";
     default:
-      return 'secondary';
+      return "secondary";
   }
 };
 
 // Main InvoicesPage component
 export default function InvoicesPage() {
-  const [invoices, setInvoices] = useState(initialInvoices);
+  const [invoices, setInvoices] = useState([
+    { id: 1, customer: "John Doe", date: "2023-05-01", amount: 299.99, status: "Paid" },
+    { id: 2, customer: "Jane Smith", date: "2023-05-05", amount: 149.5, status: "Pending" },
+    { id: 3, customer: "Bob Johnson", date: "2023-05-10", amount: 499.99, status: "Overdue" },
+  ]);
+
   const [isAddingInvoice, setIsAddingInvoice] = useState(false);
-  const [editingInvoice, setEditingInvoice] = useState<null | { id: number; customer: string; date: string; amount: string | number; status: string }>(null);
+  const [editingInvoice, setEditingInvoice] = useState<null | typeof invoices[0]>(null);
   const [deletingInvoice, setDeletingInvoice] = useState<null | number>(null);
 
-  const handleAddInvoice = (newInvoice: { customer: string; date: string; amount: string | number; status: string }) => {
+  const handleAddInvoice = (newInvoice: Omit<typeof invoices[0], "id">) => {
     setInvoices([...invoices, { ...newInvoice, id: invoices.length + 1 }]);
     setIsAddingInvoice(false);
   };
 
-  const handleEditInvoice = (updatedInvoice: { id: number; customer: string; date: string; amount: string | number; status: string }) => {
+  const handleEditInvoice = (updatedInvoice: typeof invoices[0]) => {
     setInvoices(
-      invoices.map((i) => (i.id === updatedInvoice.id ? updatedInvoice : i))
+      invoices.map((invoice) => (invoice.id === updatedInvoice.id ? updatedInvoice : invoice))
     );
     setEditingInvoice(null);
   };
 
   const handleDeleteInvoice = () => {
-    setInvoices(invoices.filter((i) => i.id !== deletingInvoice));
+    setInvoices(invoices.filter((invoice) => invoice.id !== deletingInvoice));
     setDeletingInvoice(null);
   };
 

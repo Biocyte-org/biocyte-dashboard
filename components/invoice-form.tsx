@@ -1,67 +1,46 @@
-import { useState } from 'react'
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
+import { useState } from 'react';
+import { Invoice,InvoiceFormProps } from '../types';
 
-export function InvoiceForm({ invoice, onSubmit, onCancel }) {
-  const [formData, setFormData] = useState(invoice || { customer: '', date: '', amount: '', status: '' })
 
-  const handleChange = (e) => {
-    const { name, value } = e.target
-    setFormData(prev => ({ ...prev, [name]: value }))
-  }
+export function InvoiceForm({ invoice, onSubmit }: InvoiceFormProps) {
+  const [formData, setFormData] = useState<Invoice>(
+    invoice || { id: 0, customer: '', date: '', amount: 0, status: 'Pending' }
+  );
 
-  const handleStatusChange = (value) => {
-    setFormData(prev => ({ ...prev, status:value }))
-  }
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    onSubmit({
-      ...formData,
-      amount: parseFloat(formData.amount)
-    })
-  }
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    onSubmit(formData);
+  };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 bg-card p-4 rounded-lg shadow">
-      <div>
-        <Label htmlFor="customer">Customer</Label>
-        <Input id="customer" name="customer" value={formData.customer} onChange={handleChange} required />
-      </div>
-      <div>
-        <Label htmlFor="date">Date</Label>
-        <Input id="date" name="date" type="date" value={formData.date} onChange={handleChange} required />
-      </div>
-      <div>
-        <Label htmlFor="amount">Amount</Label>
-        <Input id="amount" name="amount" type="number" step="0.01" value={formData.amount} onChange={handleChange} required />
-      </div>
-      <div>
-        <Label htmlFor="status">Status</Label>
-        <Select name="status" value={formData.status} onValueChange={handleStatusChange}>
-          <SelectTrigger>
-            <SelectValue placeholder="Select status" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="Paid">Paid</SelectItem>
-            <SelectItem value="Pending">Pending</SelectItem>
-            <SelectItem value="Overdue">Overdue</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-      <div className="flex justify-end space-x-2">
-        <Button type="button" variant="outline" onClick={onCancel}>Cancel</Button>
-        <Button type="submit">{invoice ? 'Update' : 'Add'} Invoice</Button>
-      </div>
+    <form onSubmit={handleSubmit}>
+      <input
+        type="text"
+        value={formData.customer}
+        onChange={(e) => setFormData({ ...formData, customer: e.target.value })}
+        placeholder="Customer"
+      />
+      <input
+        type="date"
+        value={formData.date}
+        onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+        placeholder="Date"
+      />
+      <input
+        type="number"
+        value={formData.amount}
+        onChange={(e) => setFormData({ ...formData, amount: parseFloat(e.target.value) })}
+        placeholder="Amount"
+      />
+      <select
+        value={formData.status}
+        onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+      >
+        <option value="Pending">Pending</option>
+        <option value="Paid">Paid</option>
+      </select>
+      <button type="submit">Submit</button>
     </form>
-  )
+  );
 }
-
