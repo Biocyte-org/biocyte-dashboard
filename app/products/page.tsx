@@ -43,6 +43,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
+import { Product,ProductFormProps } from '@/types'
 
 // Sample product data
 const initialProducts = [
@@ -52,7 +53,7 @@ const initialProducts = [
 ]
 
 // ProductForm component
-function ProductForm({ product, onSubmit, onCancel }) {
+function ProductForm({ product, onSubmit, onCancel }: ProductFormProps) {
   const [formData, setFormData] = useState(
     product || {
       name: "",
@@ -63,17 +64,22 @@ function ProductForm({ product, onSubmit, onCancel }) {
   )
   const [isLoading, setIsLoading] = useState(false)
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
     setFormData((prev) => ({ ...prev, [name]: value }))
   }
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setIsLoading(true)
     // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 1000))
-    onSubmit(formData)
+    onSubmit({ 
+      ...formData, 
+      id: product ? product.id : Date.now(),
+      price: parseFloat(formData.price as string),
+      stock: parseInt(formData.stock as string, 10)
+    })
     setIsLoading(false)
   }
 
@@ -138,18 +144,33 @@ function ProductForm({ product, onSubmit, onCancel }) {
 export default function ProductsPage() {
   const [products, setProducts] = useState(initialProducts)
   const [isAddingProduct, setIsAddingProduct] = useState(false)
-  const [editingProduct, setEditingProduct] = useState(null)
-  const [deletingProduct, setDeletingProduct] = useState(null)
+  const [editingProduct, setEditingProduct] = useState<Product | undefined>(undefined)
+  const [deletingProduct, setDeletingProduct] = useState<number | null>(null)
   const [isDeleting, setIsDeleting] = useState(false)
 
-  const handleAddProduct = (newProduct) => {
+  interface NewProduct {
+    name: string;
+    category: string;
+    price: number;
+    stock: number;
+  }
+
+  const handleAddProduct = (newProduct: NewProduct) => {
     setProducts([...products, { ...newProduct, id: products.length + 1 }])
     setIsAddingProduct(false)
   }
 
-  const handleEditProduct = (updatedProduct) => {
+  interface UpdatedProduct {
+    id: number;
+    name: string;
+    category: string;
+    price: number;
+    stock: number;
+  }
+
+  const handleEditProduct = (updatedProduct: UpdatedProduct) => {
     setProducts(products.map(p => p.id === updatedProduct.id ? updatedProduct : p))
-    setEditingProduct(null)
+    setEditingProduct(undefined)
   }
 
   const handleDeleteProduct = async () => {
@@ -200,7 +221,7 @@ export default function ProductsPage() {
           {/* Edit Product Dialog */}
           <Dialog
             open={!!editingProduct}
-            onOpenChange={() => setEditingProduct(null)}
+            onOpenChange={() => setEditingProduct(undefined)}
           >
             <DialogContent>
               <DialogHeader>
@@ -209,7 +230,7 @@ export default function ProductsPage() {
               <ProductForm
                 product={editingProduct}
                 onSubmit={handleEditProduct}
-                onCancel={() => setEditingProduct(null)}
+                onCancel={() => setEditingProduct(undefined)}
               />
             </DialogContent>
           </Dialog>
