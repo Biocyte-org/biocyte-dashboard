@@ -6,13 +6,7 @@ export interface Invoice {
     status: string;
   }
   
-  export interface Product {
-    id: number;
-    name: string;
-    category: string;
-    price: number;
-    stock: number;
-  }
+  
   
   export interface InvoiceFormProps {
     invoice?: Invoice;
@@ -20,9 +14,5 @@ export interface Invoice {
     onCancel: () => void;
   }
   
-  export interface ProductFormProps {
-    product?: Product;
-    onSubmit: (formData: Product) => void;
-    onCancel: () => void;
-  }
+  
   
