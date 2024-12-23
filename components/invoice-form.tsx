@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Invoice,InvoiceFormProps } from '../types';
+import { Invoice,InvoiceFormProps } from '@/types/invoice';
 
 
 export function InvoiceForm({ invoice, onSubmit }: InvoiceFormProps) {

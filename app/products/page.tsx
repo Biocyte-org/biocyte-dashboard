@@ -43,7 +43,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import { Product,ProductFormProps } from '@/types'
+import { Product,ProductFormProps } from '@/types/products'
 
 // Sample product data
 const initialProducts = [
