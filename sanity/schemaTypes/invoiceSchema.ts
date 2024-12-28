@@ -16,15 +16,19 @@ export default defineType({
             type: 'datetime',
         }),
         defineField({
-            name: 'customerName',
-            title: 'Customer Name',
+            name: 'Time',
+            title: 'Time',
+            type: 'time',
+        }),
+        defineField({
+            name:'Place of Supply',
+            title: 'Place of Supply',
             type: 'string',
         }),
         defineField({
-            name: 'items',
-            title: 'Items',
-            type: 'array',
-            of: [{ type: 'reference', to: { type: 'product' } }],
+            name:'Due Date',
+            title:'Due Date',
+            type:'date',
         }),
         defineField({
             name: 'totalAmount',

@@ -16,6 +16,39 @@ export default defineType({
             type: 'string',
         }),
         defineField({
+            name: 'address',
+            title: 'Address',
+            type: 'object',
+            fields: [
+                defineField({
+                    name:'House Number',
+                    title:'House Number',
+                    type:'string',
+                }),
+                defineField({
+                    name: 'street',
+                    title: 'Street',
+                    type: 'string',
+                }),
+                defineField({
+                    name:'coloni',
+                    title:'Coloni',
+                    type:'string',
+                }),
+
+                defineField({
+                    name: 'city',
+                    title: 'City',
+                    type: 'string',
+                }),
+                defineField({
+                    name: 'zipCode',
+                    title: 'Zip Code',
+                    type: 'string',
+                }),
+            ],
+        }),
+        defineField({
             name: 'email',
             title: 'Email',
             type: 'string',
@@ -26,31 +59,16 @@ export default defineType({
             type: 'string',
         }),
         defineField({
-            name: 'address',
-            title: 'Address',
-            type: 'object',
-            fields: [
-                defineField({
-                    name: 'street',
-                    title: 'Street',
-                    type: 'string',
-                }),
-                defineField({
-                    name: 'city',
-                    title: 'City',
-                    type: 'string',
-                }),
-                defineField({
-                    name: 'state',
-                    title: 'State',
-                    type: 'string',
-                }),
-                defineField({
-                    name: 'zipCode',
-                    title: 'Zip Code',
-                    type: 'string',
-                }),
-            ],
+            name:'GSTIN Number',
+            title:'GST Number',
+            type:'string',
         }),
+        defineField({
+            name: 'state',
+            title: 'State',
+            type: 'string',
+        }),
+        
+       
     ],
 });

@@ -6,27 +6,40 @@ export default defineType({
     type: 'document',
     fields: [
         defineField({
-            name: 'title',
-            title: 'Title',
+            name: 'Item name',
+            title: 'Item Name',
             type: 'string',
         }),
-        defineField({
-            name: 'description',
-            title: 'Description',
-            type: 'text',
+       defineField({
+            name:'HSN/SAC',
+            title:'HSN/SAC',
+            type:'string',
+       }) ,
+       defineField({
+            name:'Mfg. Date',
+            title:'Manufacturing Date',
+            type:'date',
         }),
         defineField({
-            name: 'price',
-            title: 'Price',
+            name:'Exp. Date',
+            title:'Expiry Date',
+            type:'date',
+        }),
+        defineField({
+            name:'Quantity',
+            title:'Quantity',
+            type:'number',
+        }),
+        defineField({
+            name:'Price/Unit',
+            title:'Price/Unit',
+            type:'number',
+        }),
+        defineField({
+            name: 'Amount',
+            title: 'Amount',
             type: 'number',
         }),
-        defineField({
-            name: 'image',
-            title: 'Image',
-            type: 'image',
-            options: {
-                hotspot: true,
-            },
-        }),
+       
     ],
 });
